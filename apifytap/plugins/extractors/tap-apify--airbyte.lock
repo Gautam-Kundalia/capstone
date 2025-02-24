@@ -1,0 +1,86 @@
+{
+  "plugin_type": "extractors",
+  "name": "tap-apify",
+  "namespace": "tap_airbyte",
+  "variant": "airbyte",
+  "label": "Apify",
+  "docs": "https://hub.meltano.com/extractors/tap-apify--airbyte",
+  "repo": "https://github.com/airbytehq/airbyte/tree/master/airbyte-integrations/connectors/source-apify-dataset",
+  "pip_url": "git+https://github.com/MeltanoLabs/tap-airbyte-wrapper.git",
+  "executable": "tap-airbyte",
+  "description": "Web Scraping, Data Extraction and Automation",
+  "logo_url": "https://hub.meltano.com/assets/logos/extractors/apify.png",
+  "capabilities": [
+    "about",
+    "catalog",
+    "discover",
+    "schema-flattening",
+    "state",
+    "stream-maps"
+  ],
+  "settings_group_validation": [
+    [
+      "airbyte_spec.image",
+      "connector_config.datasetId"
+    ]
+  ],
+  "settings": [
+    {
+      "name": "airbyte_config.clean",
+      "kind": "boolean",
+      "label": "Airbyte Config Clean",
+      "description": "If set to true, only clean items will be downloaded from the dataset. See description of what clean means in <a href=\"https://docs.apify.com/api/v2#/reference/datasets/item-collection/get-items\">Apify API docs</a>. If not sure, set clean to false."
+    },
+    {
+      "name": "airbyte_config.datasetId",
+      "kind": "string",
+      "label": "Airbyte Config Datasetid",
+      "description": "ID of the dataset you would like to load to Airbyte.",
+      "sensitive": true
+    },
+    {
+      "name": "airbyte_spec.image",
+      "kind": "string",
+      "value": "airbyte/source-apify-dataset",
+      "label": "Airbyte Spec Image",
+      "description": "Airbyte image to run"
+    },
+    {
+      "name": "airbyte_spec.tag",
+      "kind": "string",
+      "value": "latest",
+      "label": "Airbyte Spec Tag",
+      "description": "Airbyte image tag"
+    },
+    {
+      "name": "docker_mounts",
+      "kind": "array",
+      "label": "Docker Mounts",
+      "description": "Docker mounts to make available to the Airbyte container. Expects a list of maps containing source, target, and type as is documented in the docker --mount documentation"
+    },
+    {
+      "name": "flattening_enabled",
+      "kind": "boolean",
+      "label": "Flattening Enabled",
+      "description": "'True' to enable schema flattening and automatically expand nested properties."
+    },
+    {
+      "name": "flattening_max_depth",
+      "kind": "integer",
+      "label": "Flattening Max Depth",
+      "description": "The max depth to flatten schemas."
+    },
+    {
+      "name": "stream_map_config",
+      "kind": "object",
+      "label": "Stream Map Config",
+      "description": "User-defined config values to be used within map expressions."
+    },
+    {
+      "name": "stream_maps",
+      "kind": "object",
+      "label": "Stream Maps",
+      "description": "Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html)."
+    }
+  ]
+}

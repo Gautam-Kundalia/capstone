@@ -1,0 +1,12 @@
+version: 1
+default_environment: dev
+project_id: f905150e-42d8-4a48-b953-5d59023be86a
+environments:
+- name: dev
+- name: staging
+- name: prod
+plugins:
+  extractors:
+  - name: tap-apify
+    variant: airbyte
+    pip_url: git+https://github.com/MeltanoLabs/tap-airbyte-wrapper.git

@@ -1,0 +1,12 @@
+version: 1
+default_environment: dev
+project_id: 75931936-70f6-416f-a0e3-e96b6fdb6cfd
+environments:
+- name: dev
+- name: staging
+- name: prod
+plugins:
+  extractors:
+  - name: tap-zoho-crm
+    variant: airbyte
+    pip_url: git+https://github.com/MeltanoLabs/tap-airbyte-wrapper.git
