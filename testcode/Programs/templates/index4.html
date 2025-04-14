@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Generator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&display=swap">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f6f8;
+      text-align: center;
+      padding: 50px;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+
+    /* Hide the dashboard button since the pipeline will trigger dashboard activation */
+    /* #generateBtn {
+      display: none;
+    } */
+
+    #loader {
+    display: none; /* Hide by default */
+    margin: 40px auto;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #dashboardContainer {
+      margin-top: 30px;
+      align-items: center;
+    }
+
+
+    /* Hide the iframe by default */
+    #dashboardIframe {
+      display: none;
+      width: 600px;
+      height: 373.5px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Power BI Dashboard Generator</h1>
+  <!-- Hidden: The original Generate Dashboard button is now not used. -->
+  <!-- <button id="generateBtn">Generate Dashboard</button> -->
+
+  <!-- Loader is visible immediately -->
+  <div id="loader"></div>
+
+  <div id="dashboardContainer">
+    <center>
+    <!-- The iframe is hidden until activated -->
+    <iframe id="dashboardIframe" title="Sales Pipeline Dashboard" 
+            src="https://app.powerbi.com/view?r=eyJrIjoiMTY5NTljZWQtYTA3MS00MjBjLWE4ZDItMTkzNDZkMzE5ZWQzIiwidCI6ImQxZjE0MzQ4LWYxYjUtNGEwOS1hYzk5LTdlYmYyMTNjYmM4MSIsImMiOjEwfQ%3D%3D" 
+            allowFullScreen="true">
+    </iframe>
+  </center>
+  </div>
+
+  <!-- We removed the click event handler since activation is triggered externally -->
+  <script>
+    // (Optional: you can keep this script for manual testing, but it is not needed if the pipeline triggers dashboard activation.)
+    /*
+    const btn = document.getElementById("generateBtn");
+    const loader = document.getElementById("loader");
+    const dashboardIframe = document.getElementById("dashboardIframe");
+
+    btn.addEventListener("click", () => {
+      btn.style.display = "none";
+      loader.style.display = "block";
+
+      setTimeout(() => {
+        loader.style.display = "none";
+        dashboardIframe.style.display = "block";
+      }, 15000);
+    });
+    */
+  </script>
+
+</body>
+</html>
