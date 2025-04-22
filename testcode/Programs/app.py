@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO
 from celery import chain
 from demo_integration import extract_data, json_to_csv, store_csv, update_visualization
-import time  # Import time for delays
+import time
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
