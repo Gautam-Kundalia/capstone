@@ -5,6 +5,20 @@ import MySQLdb
 connection = MySQLdb.connect(host='localhost', user='root', password='root', db='accounts')
 cursor = connection.cursor()
 
+# Create Table If Not Exists
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS sales_pipeline_data (
+        opportunity_id VARCHAR(255),
+        sales_agent VARCHAR(255),
+        product VARCHAR(255),
+        account VARCHAR(255),
+        deal_stage VARCHAR(255),
+        engage_date DATE,
+        close_date DATE,
+        close_value FLOAT
+    );
+''')
+
 # Open CSV File
 with open('./Datasets/sales_pipeline.csv', 'r') as file:
     reader = csv.reader(file)

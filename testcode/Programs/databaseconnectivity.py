@@ -1,3 +1,4 @@
+
 # import csv
 # import MySQLdb
 
@@ -35,8 +36,6 @@
 #     connection.close()
 
 
-
-
 import csv
 import MySQLdb
 
@@ -53,6 +52,19 @@ with open('./Datasets/accounts.csv', 'r') as file:
     # Create a cursor object
     cursor = connection.cursor()
     
+    # Create Table (Ensuring Correct SQL Syntax)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS accounts_data (
+            account VARCHAR(1000),
+            sector VARCHAR(1000),
+            year_established INT,
+            revenue FLOAT,
+            employees INT,
+            office_location VARCHAR(1000),
+            subsidiary_of VARCHAR(1000)
+        );
+    ''')
+
     # Insert data row by row
     for row in reader:
         cursor.execute(

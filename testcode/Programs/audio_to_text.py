@@ -56,12 +56,23 @@ def convert_audio_to_text(file_path, use_whisper=False):
         except sr.RequestError:
             return "Could not request results from the Speech Recognition service."
 
+def save_transcription(text, output_file):
+    """ Save transcribed text to a file. """
+    try:
+        with open(output_file, "w", encoding="utf-8") as file:
+            file.write(text)
+        print(f"Transcription saved to {output_file}")
+    except Exception as e:
+        print(f"Error saving transcription: {e}")
+
 # Example usage
-file_path = r"C:\Users\gauta\capstone\testcode\Datasets\Cement - Azeem.mp3"
+file_path = r"C:\Users\gauta\capstone\testcode\Datasets\Standard recording 2.mp3"
+output_file = r"C:\Users\gauta\capstone\testcode\Datasets\transcription.txt"
 
 transcribed_text = convert_audio_to_text(file_path, use_whisper=True)  # Set True for Whisper
 
 if transcribed_text:
     print("\nTranscribed Text:\n", transcribed_text)
+    save_transcription(transcribed_text, output_file)
 else:
     print("\nError: Transcription failed.")

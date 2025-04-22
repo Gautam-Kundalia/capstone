@@ -1,0 +1,55 @@
+<!-- templates/main.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Integrated Data Analyst</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .tab { display: none; }
+    .tab-buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 5px;
+    }
+    .tab-buttons button.active { background: #0056b3; }
+    .tab-content { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h2>Integrated Data Analyst</h2>
+
+  <div class="tab-buttons">
+    <button class="tablink active" onclick="openTab(event, 'taskTab')">Task Logs</button>
+    <button class="tablink" onclick="openTab(event, 'kpiTab')">Dashboard</button>
+  </div>
+
+  <div id="taskTab" class="tab tab-content" style="display:block;">
+    {% include 'index.html' %}
+  </div>
+
+  <div id="kpiTab" class="tab tab-content">
+    {% include 'index4.html' %}
+  </div>
+
+  <script>
+    function openTab(evt, tabId) {
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.style.display = 'none');
+
+      const buttons = document.querySelectorAll('.tablink');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabId).style.display = 'block';
+      evt.currentTarget.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

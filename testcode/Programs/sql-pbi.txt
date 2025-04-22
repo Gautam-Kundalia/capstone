@@ -1,0 +1,132 @@
+import pymysql
+import pandas as pd
+import requests
+import json
+
+# 🔹 MySQL Configuration
+MYSQL_HOST = "your_mysql_host"
+MYSQL_USER = "your_username"
+MYSQL_PASSWORD = "your_password"
+MYSQL_DB = "your_database"
+MYSQL_QUERY = "SELECT * FROM your_table"
+
+# 🔹 Power BI API Configuration
+WORKSPACE_ID = "your_workspace_id"
+ACCESS_TOKEN = "your_power_bi_access_token"  # Obtain from Microsoft Azure
+
+# Dataset, Report, and Dashboard Names
+DATASET_NAME = "Automated_MySQL_Dataset"
+REPORT_NAME = "Automated_Sales_Report"
+DASHBOARD_NAME = "Automated_Sales_Dashboard"
+
+# ✅ Step 1: Fetch Data from MySQL
+def get_mysql_data():
+    try:
+        connection = pymysql.connect(host=MYSQL_HOST, user=MYSQL_USER, password=MYSQL_PASSWORD, database=MYSQL_DB)
+        df = pd.read_sql(MYSQL_QUERY, connection)
+        connection.close()
+        print("✅ Data fetched from MySQL successfully.")
+        return df
+    except Exception as e:
+        print(f"❌ Error fetching data from MySQL: {e}")
+        return None
+
+# ✅ Step 2: Create a Power BI Dataset
+def create_power_bi_dataset():
+    url = f"https://api.powerbi.com/v1.0/myorg/groups/{WORKSPACE_ID}/datasets"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {ACCESS_TOKEN}"}
+    dataset_payload = {
+        "name": DATASET_NAME,
+        "defaultMode": "Push",
+        "tables": [{"name": "SalesData", "columns": [
+            {"name": "Date", "dataType": "DateTime"},
+            {"name": "Product", "dataType": "String"},
+            {"name": "Revenue", "dataType": "Double"},
+            {"name": "Quantity", "dataType": "Int64"}
+        ]}]
+    }
+    response = requests.post(url, headers=headers, json=dataset_payload)
+    if response.status_code == 201:
+        print("✅ Dataset created successfully!")
+        return response.json()["id"]  # Return dataset ID
+    else:
+        print(f"❌ Error creating dataset: {response.text}")
+        return None
+
+# ✅ Step 3: Push Data to Power BI
+def push_data_to_power_bi(df, dataset_id):
+    url = f"https://api.powerbi.com/beta/{WORKSPACE_ID}/datasets/{dataset_id}/tables/SalesData/rows"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {ACCESS_TOKEN}"}
+    data = {"rows": df.to_dict(orient="records")}
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        print("✅ Data successfully pushed to Power BI!")
+    else:
+        print(f"❌ Error pushing data: {response.text}")
+
+# ✅ Step 4: Create Power BI Report
+def create_power_bi_report(dataset_id):
+    url = f"https://api.powerbi.com/v1.0/myorg/groups/{WORKSPACE_ID}/reports"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {ACCESS_TOKEN}"}
+    payload = {"name": REPORT_NAME, "datasetId": dataset_id}
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code == 201:
+        print("✅ Report created successfully!")
+        return response.json()["id"]  # Return report ID
+    else:
+        print(f"❌ Error creating report: {response.text}")
+        return None
+
+# ✅ Step 5: Create Power BI Dashboard
+def create_power_bi_dashboard():
+    url = f"https://api.powerbi.com/v1.0/myorg/groups/{WORKSPACE_ID}/dashboards"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {ACCESS_TOKEN}"}
+    payload = {"name": DASHBOARD_NAME}
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code == 201:
+        print("✅ Dashboard created successfully!")
+        return response.json()["id"]  # Return dashboard ID
+    else:
+        print(f"❌ Error creating dashboard: {response.text}")
+        return None
+
+# ✅ Step 6: Add Visual to Power BI Dashboard
+def add_tile_to_dashboard(dashboard_id, dataset_id):
+    url = f"https://api.powerbi.com/v1.0/myorg/groups/{WORKSPACE_ID}/dashboards/{dashboard_id}/tiles"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {ACCESS_TOKEN}"}
+    payload = {
+        "datasetId": dataset_id,
+        "visualizationType": "barChart",
+        "title": "Revenue by Product",
+        "dataMappings": {"X": "Product", "Y": "Revenue"}
+    }
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code == 200:
+        print("✅ Tile added to dashboard successfully!")
+    else:
+        print(f"❌ Error adding tile: {response.text}")
+
+# ✅ Step 7: Trigger Dataset Refresh
+def refresh_power_bi_dataset(dataset_id):
+    url = f"https://api.powerbi.com/v1.0/myorg/groups/{WORKSPACE_ID}/datasets/{dataset_id}/refreshes"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {ACCESS_TOKEN}"}
+    response = requests.post(url, headers=headers)
+    if response.status_code == 202:
+        print("✅ Power BI dataset refresh triggered successfully!")
+    else:
+        print(f"❌ Error refreshing dataset: {response.text}")
+
+# 🔹 Run the Full Automation Process
+if __name__ == "__main__":
+    df = get_mysql_data()  # Step 1: Fetch Data
+
+    if df is not None:
+        dataset_id = create_power_bi_dataset()  # Step 2: Create Dataset
+        if dataset_id:
+            push_data_to_power_bi(df, dataset_id)  # Step 3: Push Data
+            report_id = create_power_bi_report(dataset_id)  # Step 4: Create Report
+            dashboard_id = create_power_bi_dashboard()  # Step 5: Create Dashboard
+
+            if dashboard_id:
+                add_tile_to_dashboard(dashboard_id, dataset_id)  # Step 6: Add Visual
+                refresh_power_bi_dataset(dataset_id)  # Step 7: Refresh Dataset

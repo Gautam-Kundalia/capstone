@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataVizPro - Automated Data Analytics</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #6c757d;
+            --gray-light: #f1f3f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        textarea.input-field {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .testimonials {
+            padding: 2rem;
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        
+        .result-area {
+            margin-top: 2rem;
+            padding: 1rem;
+            border: 1px dashed var(--gray);
+            border-radius: 5px;
+            display: none;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Dashboard preview styling */
+        .dashboard-preview {
+            margin-top: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .preview-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-content {
+            padding: 1.5rem;
+            background-color: white;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .preview-chart {
+            background-color: var(--gray-light);
+            height: 200px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        .kpi-cards {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .kpi-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .preview-content {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>AI Data Analyst</h1>
+            <p>Your Automated Data Analytics Solution</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Generate Your Analytics Dashboard</h2>
+            <p>Simply describe your data, the visualizations you want, and the KPIs you'd like to track. Our AI-powered platform will do the rest!</p>
+            
+            <form id="analyticsForm">
+                <div class="form-group">
+                    <label for="dataType">What kind of data do you have?</label>
+                    <textarea class="input-field" id="dataType" placeholder="Describe your data (e.g., 'Sales data with customer demographics, product categories, and monthly revenue')"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="visualizations">What visualizations would you like?</label>
+                    <textarea class="input-field" id="visualizations" placeholder="Describe the visualizations you want (e.g., 'A line chart showing monthly trends, a pie chart for product categories, and a heat map for regional performance')"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kpis">What KPIs do you want to track?</label>
+                    <textarea class="input-field" id="kpis" placeholder="List the KPIs you want to monitor (e.g., 'Monthly revenue growth, customer acquisition cost, retention rate, average order value')"></textarea>
+                </div>
+                
+                <button type="button" class="btn" id="generateBtn">Generate Dashboard</button>
+            </form>
+        </div>
+        
+        <div class="loading" id="loadingIndicator">
+            <div class="loading-spinner"></div>
+            <p>Analyzing your requirements and generating dashboard...</p>
+        </div>
+        
+        <div class="dashboard-preview" id="dashboardPreview">
+            <div class="preview-header">
+                <h3>Your Custom Dashboard</h3>
+                <span>Preview Mode</span>
+            </div>
+            <div class="preview-content">
+                <div class="kpi-cards" id="kpiContainer">
+                    <!-- KPI cards will be added here dynamically -->
+                </div>
+                <!-- Charts will be added here dynamically -->
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Customizable Visualizations</h3>
+                <p>Choose from dozens of chart types and customize colors, labels, and more.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔍</div>
+                <h3>AI-Powered Insights</h3>
+                <p>Our advanced algorithms identify trends and anomalies you might miss.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-Time Analytics</h3>
+                <p>Connect your data sources for up-to-the-minute reporting and alerts.</p>
+            </div>
+        </div>
+        
+        <div class="testimonials">
+            <h2>What Our Customers Say</h2>
+            <p>"DataVizPro transformed how we understand our business data. Setup took minutes, not weeks!" - Sarah T., Marketing Director</p>
+            <p>"The automated insights have helped us identify opportunities we would have missed otherwise." - Marcus J., Business Analyst</p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AI Data Analyst. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            // Get values from form
+            const dataType = document.getElementById('dataType').value;
+            const visualizations = document.getElementById('visualizations').value;
+            const kpis = document.getElementById('kpis').value;
+            
+            // Simple validation
+            if (!dataType || !visualizations || !kpis) {
+                alert('Please fill in all fields to generate your dashboard.');
+                return;
+            }
+            
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+            
+            // Simulate processing time
+            setTimeout(function() {
+                // Hide loading indicator
+                document.getElementById('loadingIndicator').style.display = 'none';
+                
+                // Generate dashboard preview
+                generateDashboardPreview(dataType, visualizations, kpis);
+                
+                // Show dashboard preview
+                document.getElementById('dashboardPreview').style.display = 'block';
+                
+                // Scroll to results
+                document.getElementById('dashboardPreview').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }, 2000);
+        });
+        
+        function generateDashboardPreview(dataType, visualizations, kpis) {
+            // Clear existing content
+            const kpiContainer = document.getElementById('kpiContainer');
+            kpiContainer.innerHTML = '';
+            
+            const previewContent = document.querySelector('.preview-content');
+            
+            // Remove any charts (children except the KPI container)
+            Array.from(previewContent.children).forEach(child => {
+                if (child !== kpiContainer) {
+                    child.remove();
+                }
+            });
+            
+            // Parse KPIs and create KPI cards
+            const kpiList = kpis.split(',').map(kpi => kpi.trim()).filter(kpi => kpi);
+            kpiList.forEach(kpi => {
+                const kpiCard = document.createElement('div');
+                kpiCard.className = 'kpi-card';
+                
+                const randomValue = Math.floor(Math.random() * 100);
+                
+                kpiCard.innerHTML = `
+                    <h4>${kpi}</h4>
+                    <div class="kpi-value">${randomValue}${randomValue % 10 === 0 ? '' : '%'}</div>
+                `;
+                
+                kpiContainer.appendChild(kpiCard);
+            });
+            
+            // Parse visualization requests and create placeholders
+            const vizList = visualizations.split(',').map(viz => viz.trim()).filter(viz => viz);
+            vizList.forEach((viz, index) => {
+                const chartElement = document.createElement('div');
+                chartElement.className = 'preview-chart';
+                chartElement.innerHTML = `<div>${viz}</div>`;
+                previewContent.appendChild(chartElement);
+            });
+        }
+    </script>
+</body>
+</html>
